@@ -30,22 +30,19 @@ export class XClient {
       throw new Error(`X API error ${res.status}: ${body}`);
     }
 
-    const text = await res.text();
-    if (process.env.DEBUG) {
-      console.log(`[DEBUG] @${handle} raw response: ${text.slice(0, 500)}`);
-    }
-
-    const raw: XAPITweetsResponse = JSON.parse(text);
+    const raw: XAPITweetsResponse = await res.json();
 
     if (raw.status !== "success") {
       throw new Error(`X API returned status: ${raw.status} — ${raw.msg ?? raw.message}`);
     }
 
+    const rawTweets = raw.data?.tweets ?? [];
+
     if (process.env.DEBUG) {
-      console.log(`[DEBUG] @${handle}: API returned ${raw.tweets?.length ?? 0} tweets, has_next_page=${raw.has_next_page}`);
+      console.log(`[DEBUG] @${handle}: API returned ${rawTweets.length} tweets, has_next_page=${raw.has_next_page}`);
     }
 
-    const tweets = (raw.tweets ?? []).map((t) => this.normalizeTweet(t, handle));
+    const tweets = rawTweets.map((t) => this.normalizeTweet(t, handle));
 
     return {
       tweets,
@@ -68,7 +65,8 @@ export class XClient {
     }
 
     const raw: XAPITweetsResponse = await res.json();
-    const tweets = (raw.tweets ?? []).map((t) => this.normalizeTweet(t, "search"));
+    const rawTweets = raw.data?.tweets ?? [];
+    const tweets = rawTweets.map((t) => this.normalizeTweet(t, "search"));
 
     return {
       tweets,
@@ -110,8 +108,9 @@ export class XClient {
 
     if (!res.ok) throw new Error(`X API mentions error ${res.status}`);
 
-    const raw = await res.json();
-    const tweets = (raw.tweets ?? []).map((t: XAPITweet) => this.normalizeTweet(t, handle));
+    const raw: XAPITweetsResponse = await res.json();
+    const rawTweets = raw.data?.tweets ?? [];
+    const tweets = rawTweets.map((t: XAPITweet) => this.normalizeTweet(t, handle));
 
     return {
       tweets,
