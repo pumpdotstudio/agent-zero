@@ -165,6 +165,12 @@ async function runMonitorCycle(client: XClient, cycleNumber: number): Promise<{ 
     try {
       const { tweets } = await client.getUserTweets(account.handle);
 
+      if (tweets.length === 0) {
+        info(`@${account.handle}: API returned 0 tweets`);
+        await new Promise((r) => setTimeout(r, 500));
+        continue;
+      }
+
       // Filter to only new tweets since last check
       const lastSeenId = state.lastTweetIds[account.handle];
       const newTweets = lastSeenId

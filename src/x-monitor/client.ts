@@ -33,8 +33,12 @@ export class XClient {
 
     const raw: XAPITweetsResponse = await res.json();
 
-    if (raw.status !== "200" && raw.status !== "success") {
-      throw new Error(`X API returned status: ${raw.status} — ${raw.msg}`);
+    if (raw.status !== "success") {
+      throw new Error(`X API returned status: ${raw.status} — ${raw.msg ?? raw.message}`);
+    }
+
+    if (process.env.DEBUG) {
+      console.log(`[DEBUG] @${handle}: API returned ${raw.tweets?.length ?? 0} tweets, has_next_page=${raw.has_next_page}`);
     }
 
     const tweets = (raw.tweets ?? []).map((t) => this.normalizeTweet(t, handle));

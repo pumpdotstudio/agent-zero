@@ -55,7 +55,8 @@ export interface IntelAlert {
 // Raw X API response — get_user_last_tweets
 export interface XAPITweetsResponse {
   status: string;
-  msg: string;
+  msg?: string;
+  message?: string;
   tweets: XAPITweet[];
   has_next_page: boolean;
   next_cursor: string;
