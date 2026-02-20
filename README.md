@@ -47,6 +47,7 @@ npm run analyst:critical  # Analyze critical alerts only
 | [`war-room/TECH-VALIDATION.md`](war-room/TECH-VALIDATION.md) | API health results, codebase architecture, X API schema, endpoint status |
 | [`war-room/ACCOUNTS.md`](war-room/ACCOUNTS.md) | All 17 monitored X accounts — founders, advisors, competitors |
 | [`war-room/RESEARCH-LOG.md`](war-room/RESEARCH-LOG.md) | Full 6-agent research consortium output and key insights |
+| [`war-room/MARKETING.md`](war-room/MARKETING.md) | "Train the Next Generation" campaign — tweets, threads, content calendar, voice guidelines |
 | `war-room/intel/` | AI-generated strategic briefs (auto-populated by Grok) |
 
 ## Signal Detection
