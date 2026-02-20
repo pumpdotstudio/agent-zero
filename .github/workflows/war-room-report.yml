@@ -39,6 +39,16 @@ jobs:
           PUMP_STUDIO_API_KEY: ${{ secrets.PUMP_STUDIO_API_KEY }}
         run: npx tsx src/intel/synthesizer.ts
 
+      - name: Generate AI strategic brief
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -n "$OPENROUTER_API_KEY" ]; then
+            npx tsx src/intel/analyst.ts
+          else
+            echo "OPENROUTER_API_KEY not set — skipping AI brief"
+          fi
+
       - name: Check API health
         run: |
           echo "## API Health Check" >> $GITHUB_STEP_SUMMARY
@@ -60,6 +70,6 @@ jobs:
         run: |
           git config user.name "agent-zero[bot]"
           git config user.email "agent-zero[bot]@users.noreply.github.com"
-          git add data/ || true
+          git add data/ war-room/intel/ || true
           git diff --cached --quiet || git commit -m "intel: daily war room report $(date -u +%Y%m%d)"
           git push || true

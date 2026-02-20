@@ -7,6 +7,8 @@
     "monitor": "tsx src/x-monitor/monitor.ts",
     "monitor:loop": "tsx src/x-monitor/monitor.ts --loop",
     "intel": "tsx src/intel/synthesizer.ts",
+    "analyst": "tsx src/intel/analyst.ts",
+    "analyst:critical": "tsx src/intel/analyst.ts --critical",
     "test": "vitest run"
   },
   "dependencies": {

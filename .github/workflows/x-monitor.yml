@@ -41,10 +41,19 @@ jobs:
           X_API_KEY: ${{ secrets.X_API_KEY }}
         run: npx tsx src/x-monitor/monitor.ts
 
+      - name: Run critical alert analysis
+        if: success()
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -n "$OPENROUTER_API_KEY" ]; then
+            npx tsx src/intel/analyst.ts --critical || true
+          fi
+
       - name: Commit updated state
         run: |
           git config user.name "agent-zero[bot]"
           git config user.email "agent-zero[bot]@users.noreply.github.com"
-          git add data/ || true
+          git add data/ war-room/intel/ || true
           git diff --cached --quiet || git commit -m "intel: x monitor cycle $(date -u +%Y%m%d-%H%M)"
           git push || true
