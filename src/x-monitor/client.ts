@@ -30,7 +30,12 @@ export class XClient {
       throw new Error(`X API error ${res.status}: ${body}`);
     }
 
-    const raw: XAPITweetsResponse = await res.json();
+    const text = await res.text();
+    if (process.env.DEBUG) {
+      console.log(`[DEBUG] @${handle} raw response: ${text.slice(0, 500)}`);
+    }
+
+    const raw: XAPITweetsResponse = JSON.parse(text);
 
     if (raw.status !== "success") {
       throw new Error(`X API returned status: ${raw.status} — ${raw.msg ?? raw.message}`);
