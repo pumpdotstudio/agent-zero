@@ -1,0 +1,50 @@
+name: X Monitor
+
+on:
+  schedule:
+    # Run every 30 minutes during hackathon crunch
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+    inputs:
+      accounts:
+        description: "Comma-separated handles to check (empty = all)"
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Restore monitor state
+        uses: actions/cache@v4
+        with:
+          path: data/
+          key: monitor-state-${{ github.run_id }}
+          restore-keys: |
+            monitor-state-
+
+      - name: Run X monitor
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+        run: npx tsx src/x-monitor/monitor.ts
+
+      - name: Commit updated state
+        run: |
+          git config user.name "agent-zero[bot]"
+          git config user.email "agent-zero[bot]@users.noreply.github.com"
+          git add data/ || true
+          git diff --cached --quiet || git commit -m "intel: x monitor cycle $(date -u +%Y%m%d-%H%M)"
+          git push || true

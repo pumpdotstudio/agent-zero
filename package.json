@@ -1,0 +1,20 @@
+{
+  "name": "agent-zero",
+  "version": "0.1.0",
+  "description": "War room operations for pump.studio hackathon",
+  "type": "module",
+  "scripts": {
+    "monitor": "tsx src/x-monitor/monitor.ts",
+    "monitor:loop": "tsx src/x-monitor/monitor.ts --loop",
+    "intel": "tsx src/intel/synthesizer.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^4.0.18"
+  }
+}

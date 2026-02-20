@@ -1,0 +1,65 @@
+name: Daily War Room Report
+
+on:
+  schedule:
+    # Daily at 6 AM UTC (10 PM PST)
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Restore monitor state
+        uses: actions/cache@v4
+        with:
+          path: data/
+          key: monitor-state-${{ github.run_id }}
+          restore-keys: |
+            monitor-state-
+
+      - name: Generate daily intel report
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          PUMP_STUDIO_API_KEY: ${{ secrets.PUMP_STUDIO_API_KEY }}
+        run: npx tsx src/intel/synthesizer.ts
+
+      - name: Check API health
+        run: |
+          echo "## API Health Check" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://api.pump.studio/health")
+          echo "- \`/health\`: $STATUS" >> $GITHUB_STEP_SUMMARY
+
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://api.pump.studio/api/v1/overview")
+          echo "- \`/api/v1/overview\`: $STATUS" >> $GITHUB_STEP_SUMMARY
+
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://api.pump.studio/api/v1/datapoint?mint=So11111111111111111111111111111111111111112")
+          echo "- \`/api/v1/datapoint\`: $STATUS" >> $GITHUB_STEP_SUMMARY
+
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://api.pump.studio/api/v1/graduating?limit=1")
+          echo "- \`/api/v1/graduating\`: $STATUS" >> $GITHUB_STEP_SUMMARY
+
+      - name: Commit report
+        run: |
+          git config user.name "agent-zero[bot]"
+          git config user.email "agent-zero[bot]@users.noreply.github.com"
+          git add data/ || true
+          git diff --cached --quiet || git commit -m "intel: daily war room report $(date -u +%Y%m%d)"
+          git push || true
