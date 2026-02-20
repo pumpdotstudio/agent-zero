@@ -20,8 +20,7 @@ export class XClient {
 
   // Fetch latest tweets from a user
   async getUserTweets(handle: string, cursor?: string): Promise<{ tweets: XTweet[]; nextCursor?: string; hasMore: boolean }> {
-    const params = new URLSearchParams({ userName: handle });
-    if (cursor) params.set("cursor", cursor);
+    const params = new URLSearchParams({ userName: handle, cursor: cursor ?? "" });
 
     const url = `${X_API_BASE}/twitter/user/last_tweets?${params}`;
     const res = await fetch(url, { method: "GET", headers: this.headers() });
