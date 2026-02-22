@@ -1,9 +1,9 @@
-# War Room Daily Report — 2026-02-21
-Generated: 2026-02-21 20:35:10 UTC
+# War Room Daily Report — 2026-02-22
+Generated: 2026-02-22 07:54:11 UTC
 
 ## Quick Stats
 - **Signals (24h):** 0 (0 high/critical)
-- **Tweets tracked (24h):** 19
+- **Tweets tracked (24h):** 15
 - **Accounts monitored:** 5
 
 ## API Health
@@ -12,4 +12,4 @@ Generated: 2026-02-21 20:35:10 UTC
 - ✅ `/api/v1/graduating`: 200
 
 ## Hackathon Countdown
-**5 days remaining** until Feb 25 23:59 EST deadline
+**4 days remaining** until Feb 25 23:59 EST deadline
