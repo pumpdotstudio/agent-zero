@@ -1,9 +1,9 @@
-# War Room Daily Report — 2026-02-22
-Generated: 2026-02-22 07:54:11 UTC
+# War Room Daily Report — 2026-02-23
+Generated: 2026-02-23 03:43:38 UTC
 
 ## Quick Stats
 - **Signals (24h):** 0 (0 high/critical)
-- **Tweets tracked (24h):** 15
+- **Tweets tracked (24h):** 10
 - **Accounts monitored:** 5
 
 ## API Health
